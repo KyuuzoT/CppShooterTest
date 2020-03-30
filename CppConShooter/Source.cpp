@@ -3,6 +3,7 @@
 #include <iostream>
 using namespace std;
 #include <Windows.h>
+#include <chrono>
 
 
 int iScreenWidth = 120;
@@ -31,6 +32,9 @@ int main()
 	int iCeiling = 0;
 	int iFloor = 0;
 
+	chrono::duration<float> elapsedTime;
+	float fElapsedTime;
+
 	//Create Screen Buffer
 	TCHAR *screen = new TCHAR[iScreenWidth*iScreenHeight];
 	HANDLE hConsole = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
@@ -56,17 +60,25 @@ int main()
 	map += L"#..............#";
 	map += L"################";
 
+
+	auto timePoint1 = chrono::system_clock::now();
+	auto timePoint2 = chrono::system_clock::now();
+	
 	//Game Loop
 	while (true)
 	{
+		timePoint2 = chrono::system_clock::now();
+		elapsedTime = timePoint2 - timePoint1;
+		fElapsedTime = elapsedTime.count();
+		
 		//movement control
 		if (GetAsyncKeyState((unsigned short)'A') & 0x8000)
 		{
-			fPlayerAngle += -0.1f;
+			fPlayerAngle += -0.1f*fElapsedTime;
 		}
 		if (GetAsyncKeyState((unsigned short)'D') & 0x8000)
 		{
-			fPlayerAngle += 0.1f;
+			fPlayerAngle += 0.1f*fElapsedTime;
 		}
 
 
