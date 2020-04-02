@@ -34,6 +34,7 @@ int main()
 
 	chrono::duration<float> elapsedTime;
 	float fElapsedTime;
+	short iShade = ' ';
 
 	//Create Screen Buffer
 	TCHAR *screen = new TCHAR[iScreenWidth*iScreenHeight];
@@ -111,10 +112,33 @@ int main()
 					}
 				}
 			}
-
+			//Вычисляем дистанцию до пола и потолка
 			iCeiling = (float)(iScreenHeight / 2.0) - iScreenHeight / fDisctanceToWall;
 			iFloor = iScreenHeight - iCeiling;
 
+			
+
+			if (fDisctanceToWall <= fDepthOfView / 4.0f)
+			{
+				iShade = 0x2588;
+			}
+			else if (fDisctanceToWall < fDepthOfView / 3.0f)
+			{
+				iShade = 0x2593;
+			}
+			else if (fDisctanceToWall < fDepthOfView / 2.0f)
+			{
+				iShade = 0x2592;
+			}
+			else if (fDisctanceToWall < fDepthOfView)
+			{
+				iShade = 0x2591;
+			}
+			else
+			{
+				iShade = ' ';
+			}
+			
 			for (int y = 0; y < iScreenHeight; y++)
 			{
 				if (y < iCeiling)
