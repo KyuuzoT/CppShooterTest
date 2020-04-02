@@ -147,7 +147,7 @@ int main()
 				}
 				else if (y > iCeiling && y <= iFloor)
 				{
-					screen[y*iScreenWidth + x] = '#';
+					screen[y*iScreenWidth + x] = iShade;
 				}
 				else
 				{
