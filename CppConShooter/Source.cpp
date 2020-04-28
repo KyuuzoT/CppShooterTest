@@ -2,8 +2,10 @@
 
 #include <iostream>
 using namespace std;
+#include <io.h>
 #include <Windows.h>
 #include <chrono>
+#include <fcntl.h>
 
 
 int nScreenWidth = 120;
@@ -21,6 +23,9 @@ float fDepth = 16.0f;
 
 int main()
 {
+	_setmode(_fileno(stdout), _O_U8TEXT);
+	_setmode(_fileno(stdin), _O_U8TEXT);
+	setlocale(LC_ALL, "RUS");
 	TCHAR *screen = new TCHAR[nScreenWidth*nScreenHeight];
 	HANDLE hConsole = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
 	SetConsoleActiveScreenBuffer(hConsole);
@@ -61,11 +66,11 @@ int main()
 		//Handle CCW Rotation
 		if (GetAsyncKeyState((unsigned short)'A') & 0x8000)
 		{
-			fPlayerA -= (0.1f)*fElapsedTime;
+			fPlayerA -= (0.27f)*fElapsedTime;
 		}
 		if (GetAsyncKeyState((unsigned short)'D') & 0x8000)
 		{
-			fPlayerA += (0.1f)*fElapsedTime;
+			fPlayerA += (0.27f)*fElapsedTime;
 		}
 
 		for (int x = 0; x < nScreenWidth; x++)
@@ -103,6 +108,27 @@ int main()
 			int nCeiling = (float)(nScreenHeight / 2.0) - nScreenHeight / ((float)fDistanceToWall);
 			int nFloor = nScreenHeight - nCeiling;
 
+			short nShade = ' ';
+
+			if (fDistanceToWall <= fDepth / 4.0f) //Very close
+			{
+				nShade = 0xDB;
+			}
+			else if (fDistanceToWall <= fDepth / 3.0f)
+			{
+				nShade = 0xB2;
+			}else if (fDistanceToWall <= fDepth / 2.0f)
+			{
+				nShade = 0xB1;
+			}else if (fDistanceToWall <= fDepth)
+			{
+				nShade = 0xB0;
+			}
+			else //Very distant
+			{
+				nShade = ' ';
+			}
+
 			for (int y = 0; y < nScreenHeight; y++)
 			{
 				if (y < nCeiling)
@@ -111,7 +137,7 @@ int main()
 				}
 				else if (y > nCeiling && y <= nFloor)
 				{
-					screen[y*nScreenWidth + x] = '#';
+					screen[y*nScreenWidth + x] = nShade;
 				}
 				else
 				{
