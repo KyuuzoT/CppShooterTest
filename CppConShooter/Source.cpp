@@ -9,8 +9,8 @@ using namespace std;
 int nScreenWidth = 120;
 int nScreenHeight = 40;
 
-float fPlayerX = 0.0f;
-float fPlayerY = 0.0f;
+float fPlayerX = 8.0f;
+float fPlayerY = 8.0f;
 float fPlayerA = 0.0f;
 
 int nMapHeight = 16;
@@ -45,9 +45,29 @@ int main()
 	map += L"#..............#";
 	map += L"################";
 
+	auto tp1 = chrono::system_clock::now();
+	auto tp2 = chrono::system_clock::now();
+
 	//Game loop
 	while (true)
 	{
+		tp2 = chrono::system_clock::now();
+		chrono::duration<float> elapsedTime = tp2 - tp1;
+		tp1 = tp2;
+		float fElapsedTime = elapsedTime.count();
+
+
+		//Controls
+		//Handle CCW Rotation
+		if (GetAsyncKeyState((unsigned short)'A') & 0x8000)
+		{
+			fPlayerA -= (0.1f)*fElapsedTime;
+		}
+		if (GetAsyncKeyState((unsigned short)'D') & 0x8000)
+		{
+			fPlayerA += (0.1f)*fElapsedTime;
+		}
+
 		for (int x = 0; x < nScreenWidth; x++)
 		{
 			//for each column, calculate the projected ray angle into world space
@@ -82,6 +102,25 @@ int main()
 			//Calculate distance to ceiling and floor
 			int nCeiling = (float)(nScreenHeight / 2.0) - nScreenHeight / ((float)fDistanceToWall);
 			int nFloor = nScreenHeight - nCeiling;
+
+			for (int y = 0; y < nScreenHeight; y++)
+			{
+				if (y < nCeiling)
+				{
+					screen[y*nScreenWidth + x] = ' ';
+				}
+				else if (y > nCeiling && y <= nFloor)
+				{
+					screen[y*nScreenWidth + x] = '#';
+				}
+				else
+				{
+					screen[y*nScreenWidth + x] = ' ';
+				}
+				
+				
+				
+			}
 		}
 
 
