@@ -66,11 +66,23 @@ int main()
 		//Handle CCW Rotation
 		if (GetAsyncKeyState((unsigned short)'A') & 0x8000)
 		{
-			fPlayerA -= (0.27f)*fElapsedTime;
+			fPlayerA -= (0.8f)*fElapsedTime;
 		}
 		if (GetAsyncKeyState((unsigned short)'D') & 0x8000)
 		{
-			fPlayerA += (0.27f)*fElapsedTime;
+			fPlayerA += (0.8f)*fElapsedTime;
+		}
+		//forward
+		if (GetAsyncKeyState((unsigned short)'W') & 0x8000)
+		{
+			fPlayerX += sinf(fPlayerA)*5.0f*fElapsedTime;
+			fPlayerY += cosf(fPlayerA)*5.0f*fElapsedTime;
+		}
+		//backward
+		if (GetAsyncKeyState((unsigned short)'S') & 0x8000)
+		{
+			fPlayerX -= sinf(fPlayerA)*5.0f*fElapsedTime;
+			fPlayerY -= cosf(fPlayerA)*5.0f*fElapsedTime;
 		}
 
 		for (int x = 0; x < nScreenWidth; x++)
@@ -131,7 +143,7 @@ int main()
 
 			for (int y = 0; y < nScreenHeight; y++)
 			{
-				if (y < nCeiling)
+				if (y <= nCeiling)
 				{
 					screen[y*nScreenWidth + x] = ' ';
 				}
@@ -141,7 +153,7 @@ int main()
 				}
 				else
 				{
-					screen[y*nScreenWidth + x] = ' ';
+					screen[y*nScreenWidth + x] = 0xFD;
 				}
 				
 				
