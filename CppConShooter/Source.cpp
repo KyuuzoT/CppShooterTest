@@ -8,6 +8,35 @@ using namespace std;
 #include <fcntl.h>
 
 
+//enum Colors
+//{
+//	Black,
+//	Blue,
+//	Green,
+//	Cyan,
+//	Red,
+//	Magenta,
+//	Brown,
+//	DarkGray,
+//	LightGray,
+//	LightBlue,
+//	LightGreen,
+//	LightCyan,
+//	LightRed,
+//	LightMagenta,
+//	Yellow,
+//	White
+//
+//};
+//
+//template<Colors txt = LightGray, Colors bg = Black>
+//ostream& color(ostream &text)
+//{
+//	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+//	SetConsoleTextAttribute(hStdOut, (WORD)((bg << 4) | txt));
+//	return text;
+//}
+
 int nScreenWidth = 120;
 int nScreenHeight = 40;
 
@@ -153,7 +182,29 @@ int main()
 				}
 				else
 				{
-					screen[y*nScreenWidth + x] = 0xFD;
+					//Shading the floor based on distance
+					float b = 1.0f - (((float)y - nScreenHeight / 2.0f) / ((float)nScreenHeight / 2.0f));
+					if (b < 0.25f)
+					{
+						nShade = '#';
+					}
+					else if (b < 0.5f)
+					{
+						nShade = 'x';
+					}
+					else if (b < 0.75f)
+					{
+						nShade = '.';
+					}
+					else if (b < 0.9f)
+					{
+						nShade = '-';
+					}
+					else
+					{
+						nShade = ' ';
+					}
+					screen[y*nScreenWidth + x] = /*0xFD*/ nShade;
 				}
 				
 				
@@ -167,6 +218,7 @@ int main()
 
 	}
 
+	
 	
 
 	return 0;
