@@ -8,34 +8,15 @@ using namespace std;
 #include <fcntl.h>
 
 
-//enum Colors
-//{
-//	Black,
-//	Blue,
-//	Green,
-//	Cyan,
-//	Red,
-//	Magenta,
-//	Brown,
-//	DarkGray,
-//	LightGray,
-//	LightBlue,
-//	LightGreen,
-//	LightCyan,
-//	LightRed,
-//	LightMagenta,
-//	Yellow,
-//	White
-//
-//};
-//
-//template<Colors txt = LightGray, Colors bg = Black>
-//ostream& color(ostream &text)
-//{
-//	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-//	SetConsoleTextAttribute(hStdOut, (WORD)((bg << 4) | txt));
-//	return text;
-//}
+enum MovementMode
+{
+	Forwards,
+	Backwards
+};
+
+MovementMode mmMode = Forwards;
+
+void onCollision(MovementMode mode, wstring map, float fTime);
 
 int nScreenWidth = 120;
 int nScreenHeight = 40;
@@ -106,12 +87,16 @@ int main()
 		{
 			fPlayerX += sinf(fPlayerA)*5.0f*fElapsedTime;
 			fPlayerY += cosf(fPlayerA)*5.0f*fElapsedTime;
+
+			onCollision(Forwards, map, fElapsedTime);
 		}
 		//backward
 		if (GetAsyncKeyState((unsigned short)'S') & 0x8000)
 		{
 			fPlayerX -= sinf(fPlayerA)*5.0f*fElapsedTime;
 			fPlayerY -= cosf(fPlayerA)*5.0f*fElapsedTime;
+
+			onCollision(Backwards, map, fElapsedTime);
 		}
 
 		for (int x = 0; x < nScreenWidth; x++)
@@ -222,4 +207,28 @@ int main()
 	
 
 	return 0;
+}
+
+
+void onCollision(MovementMode mode, wstring map, float fTime)
+{
+	switch (mode)
+	{
+	case Forwards:
+		if (map[(int)fPlayerY*nMapWidth + (int)fPlayerX] == '#')
+		{
+			fPlayerX -= sinf(fPlayerA)*5.0f*fTime;
+			fPlayerY -= cosf(fPlayerA)*5.0f*fTime;
+		}
+		break;
+	case Backwards:
+		if (map[(int)fPlayerY*nMapWidth + (int)fPlayerX] == '#')
+		{
+			fPlayerX += sinf(fPlayerA)*5.0f*fTime;
+			fPlayerY += cosf(fPlayerA)*5.0f*fTime;
+		}
+		break;
+	default:
+		break;
+	}
 }
