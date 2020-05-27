@@ -32,7 +32,7 @@ float fPlayerA = 0.0f;
 int nMapHeight = 16;
 int nMapWidth = 16;
 
-float fFOV = 3.14159 / 4.0f;
+float fFOV = 3.14159f / 4.0f;
 float fDepth = 16.0f;
 
 int main()
@@ -240,12 +240,25 @@ int main()
 					}
 					screen[y*nScreenWidth + x] = /*0xFD*/ nShade;
 				}
-
-
-
 			}
-		}
 
+			
+		}
+		//We need to cast screen back to wchar_t* because swprint_f does not know about TCHAR*
+		wchar_t *charScreen = (wchar_t*)screen;
+		//Display stats e.g. position, angle, FPS
+		swprintf_s(
+			charScreen,
+			40,
+			L"X=%3.2f, Y=%3.2f, A=%3.2f, FPS=%3.2f ",
+			fPlayerX,
+			fPlayerY,
+			fPlayerA,
+			1.0f / fElapsedTime
+		);
+
+
+		
 
 		screen[nScreenWidth*nScreenHeight - 1] = '\0';
 		WriteConsoleOutputCharacter(hConsole, screen, nScreenWidth*nScreenHeight, { 0,0 }, &dwBytesWritten);
