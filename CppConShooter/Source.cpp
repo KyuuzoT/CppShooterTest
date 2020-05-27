@@ -257,7 +257,17 @@ int main()
 			1.0f / fElapsedTime
 		);
 
+		//Displaying minimap
+		for (int nx = 0; nx < nMapWidth; nx++)
+		{
+			for (int ny = 0; ny < nMapWidth; ny++)
+			{
+				screen[(ny + 1)*nScreenWidth + nx] = map[ny*nMapWidth + nx];
+			}
+		}
 
+		//Player marker on minimap
+		screen[((int)fPlayerY + 1)*nScreenWidth + (int)fPlayerX] = 'P';
 		
 
 		screen[nScreenWidth*nScreenHeight - 1] = '\0';
