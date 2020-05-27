@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.1022
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppConShooter", "CppConShooter\CppConShooter.vcxproj", "{E6B0EC21-8A64-4F7B-89BE-F12F2E5953C0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppGraphicsEngine", "CppGraphicsEngine\CppGraphicsEngine.vcxproj", "{3C761FA9-3097-4D45-8EB2-3AE97CADE5C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{E6B0EC21-8A64-4F7B-89BE-F12F2E5953C0}.Release|x64.Build.0 = Release|x64
 		{E6B0EC21-8A64-4F7B-89BE-F12F2E5953C0}.Release|x86.ActiveCfg = Release|Win32
 		{E6B0EC21-8A64-4F7B-89BE-F12F2E5953C0}.Release|x86.Build.0 = Release|Win32
+		{3C761FA9-3097-4D45-8EB2-3AE97CADE5C7}.Debug|x64.ActiveCfg = Debug|x64
+		{3C761FA9-3097-4D45-8EB2-3AE97CADE5C7}.Debug|x64.Build.0 = Debug|x64
+		{3C761FA9-3097-4D45-8EB2-3AE97CADE5C7}.Debug|x86.ActiveCfg = Debug|Win32
+		{3C761FA9-3097-4D45-8EB2-3AE97CADE5C7}.Debug|x86.Build.0 = Debug|Win32
+		{3C761FA9-3097-4D45-8EB2-3AE97CADE5C7}.Release|x64.ActiveCfg = Release|x64
+		{3C761FA9-3097-4D45-8EB2-3AE97CADE5C7}.Release|x64.Build.0 = Release|x64
+		{3C761FA9-3097-4D45-8EB2-3AE97CADE5C7}.Release|x86.ActiveCfg = Release|Win32
+		{3C761FA9-3097-4D45-8EB2-3AE97CADE5C7}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

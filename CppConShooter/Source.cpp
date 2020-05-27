@@ -242,20 +242,27 @@ int main()
 				}
 			}
 
-			
+
 		}
-		//We need to cast screen back to wchar_t* because swprint_f does not know about TCHAR*
-		wchar_t *charScreen = (wchar_t*)screen;
-		//Display stats e.g. position, angle, FPS
-		swprintf_s(
-			charScreen,
-			40,
-			L"X=%3.2f, Y=%3.2f, A=%3.2f, FPS=%3.2f ",
-			fPlayerX,
-			fPlayerY,
-			fPlayerA,
-			1.0f / fElapsedTime
-		);
+		try
+		{
+			//We need to cast screen back to wchar_t* because swprint_f does not know about TCHAR*
+			wchar_t *charScreen = (wchar_t*)screen;
+			//Display stats e.g. position, angle, FPS
+			swprintf_s(
+				charScreen,
+				40,
+				L"X=%3.2f, Y=%3.2f, A=%3.2f, FPS=%3.2f ",
+				fPlayerX,
+				fPlayerY,
+				fPlayerA,
+				1.0f / fElapsedTime
+			);
+		}
+		catch (std::exception& e) {
+			std::cout << "exception: " << e.what() << std::endl;
+		}
+
 
 		//Displaying minimap
 		for (int nx = 0; nx < nMapWidth; nx++)
@@ -268,10 +275,10 @@ int main()
 
 		//Player marker on minimap
 		screen[((int)fPlayerY + 1)*nScreenWidth + (int)fPlayerX] = 'P';
-		
+
 
 		screen[nScreenWidth*nScreenHeight - 1] = '\0';
-		WriteConsoleOutputCharacter(hConsole, screen, nScreenWidth*nScreenHeight, { 0,0 }, &dwBytesWritten);
+		WriteConsoleOutputCharacter(hConsole, screen, nScreenWidth * nScreenHeight, { 0,0 }, &dwBytesWritten);
 
 	}
 
