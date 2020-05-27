@@ -6,6 +6,9 @@ using namespace std;
 #include <Windows.h>
 #include <chrono>
 #include <fcntl.h>
+#include <vector>
+#include <algorithm>
+
 
 
 enum MovementMode
@@ -15,6 +18,7 @@ enum MovementMode
 };
 
 MovementMode mmMode = Forwards;
+
 
 void onCollision(MovementMode mode, wstring map, float fTime);
 
@@ -53,7 +57,7 @@ int main()
 	map += L"#..............#";
 	map += L"#..............#";
 	map += L"#..............#";
-	map += L"#..............#";
+	map += L"#......#.......#";
 	map += L"#..............#";
 	map += L"#..............#";
 	map += L"#..............#";
@@ -106,6 +110,7 @@ int main()
 
 			float fDistanceToWall = 0.0f;
 			bool bHitWall = false;
+			bool bBoundary = false;
 
 			float fEyeX = sinf(fRayAngle); //Unti vector for ray in player space
 			float fEyeY = cosf(fRayAngle);
@@ -121,11 +126,48 @@ int main()
 					bHitWall = true;
 					fDistanceToWall = fDepth; //Just set distance to maximum depth
 				}
-				else 
+				else
 				{
 					if (map[nTestY*nMapWidth + nTestX] == '#')
 					{
 						bHitWall = true;
+
+						vector<pair<float, float>> p; //distance, dot
+
+						for (int tx = 0; tx < 2; tx++)
+						{
+							for (int ty = 0; ty < 2; ty++)
+							{
+								float vy = (float)nTestY + ty - fPlayerY;
+								float vx = (float)nTestX + tx - fPlayerX;
+								float d = sqrt(vx*vx + vy * vy);//magnitude
+								float dot = (fEyeX * vx / d) + (fEyeY * vy / d);
+
+								p.push_back(make_pair(d, dot));
+							}
+						}
+
+						//Sort pairs from closest to farthest
+						sort(
+							p.begin(),
+							p.end(),
+							[](const pair<float, float> &left, const pair<float, float> &right)
+						{return left.first < right.first; }
+						);
+
+						float fBound = 0.01f;
+						if (acos(p.at(0).second) < fBound) //first edge of 'block'
+						{
+							bBoundary = true;
+						}
+						if (acos(p.at(1).second) < fBound) //secon edge of 'block'
+						{
+							bBoundary = true;
+						}
+						if (acos(p.at(2).second) < fBound) //At some moment we could see as much as 3 edges of the 'block'
+						{
+							bBoundary = true;
+						}
 					}
 				}
 			}
@@ -143,16 +185,23 @@ int main()
 			else if (fDistanceToWall <= fDepth / 3.0f)
 			{
 				nShade = 0xB2;
-			}else if (fDistanceToWall <= fDepth / 2.0f)
+			}
+			else if (fDistanceToWall <= fDepth / 2.0f)
 			{
 				nShade = 0xB1;
-			}else if (fDistanceToWall <= fDepth)
+			}
+			else if (fDistanceToWall <= fDepth)
 			{
 				nShade = 0xB0;
 			}
 			else //Very distant
 			{
 				nShade = ' ';
+			}
+
+			if (bBoundary)
+			{
+				nShade = ' ';//Black it out
 			}
 
 			for (int y = 0; y < nScreenHeight; y++)
@@ -191,23 +240,24 @@ int main()
 					}
 					screen[y*nScreenWidth + x] = /*0xFD*/ nShade;
 				}
-				
-				
-				
+
+
+
 			}
 		}
 
 
-	screen[nScreenWidth*nScreenHeight - 1] = '\0';
-	WriteConsoleOutputCharacter(hConsole, screen, nScreenWidth*nScreenHeight, { 0,0 }, &dwBytesWritten);
+		screen[nScreenWidth*nScreenHeight - 1] = '\0';
+		WriteConsoleOutputCharacter(hConsole, screen, nScreenWidth*nScreenHeight, { 0,0 }, &dwBytesWritten);
 
 	}
 
-	
-	
+
+
 
 	return 0;
 }
+
 
 
 void onCollision(MovementMode mode, wstring map, float fTime)
